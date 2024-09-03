@@ -1,0 +1,105 @@
+create database sqlpractise;
+use sqlpractise;
+
+create table emp(
+id int auto_increment primary key,
+name varchar(100),
+dep_id int,
+salary decimal(10,2),
+hire_date date
+);
+create table departments(
+name varchar(100),
+id int auto_increment primary key
+);
+insert into emp(name,dep_id,salary,hire_date) 
+values('yashmitha',1,200000,'24-07-22'),
+('karthik',2,200000,'24-07-28'),
+('copper',3,440000,'20-07-22'),
+('armin',4,25000,'22-09-25'),
+('jujutsu',4,3300,'24-03-15');
+
+insert into departments(name) values
+('software developer-2'),
+('fullstack developer'),
+('hr'),
+('engineer');
+
+select * from emp;
+select * from departments;
+
+select sum(salary) as tot_salary,
+	   avg(salary) as avg_salary,
+       max(salary) as max_salary,
+       min(salary) as min_salary,
+       count(id)  as numsid
+from emp;
+
+-- alter add
+alter table emp add email varchar(50) after name  ; -- we can even say where to change the column(syntax: after columnname)
+set SQL_SAFE_UPDATES=0;
+
+UPDATE emp SET email = 'yashmitha@example.com' WHERE name = 'yashmitha';
+UPDATE emp SET email = 'karthik@example.com' WHERE name = 'karthik';
+UPDATE emp SET email = 'copper@example.com' WHERE name = 'copper';
+UPDATE emp SET email = 'armin@example.com' WHERE name = 'armin';
+UPDATE emp SET email = 'jujutsu@example.com' WHERE name = 'jujutsu';
+delete from emp where name='armin';
+
+-- alter drop
+alter table emp drop column email;
+
+-- alter modify the datatype 
+alter table emp modify salary decimal(12,2);
+
+-- alter rename column   syntax: change column name oldname newname datatype
+alter table emp change column name full_name varchar(50);
+
+-- alter change tablename syntax: oldtablename rename to newname
+alter table emp  rename to staff;
+SELECT * FROM staff;
+
+-- add multiple columns
+alter table staff
+add column address varchar(100),
+add column phonenum varchar(15);
+SELECT * FROM staff;
+
+-- drop multiple columns
+alter table staff drop column address;
+alter table staff drop column phonenum;
+SELECT * FROM staff;
+
+-- add primary key  incase if we forget to mention primary key when table creation, now it wont work cus we have primary key alr
+alter table departments add primary key (id);
+
+-- drop primary key if tables are connected,it doesnot work 
+alter table departments drop primary key;
+
+-- add a foreign key
+alter table staff
+add constraint foreignkeyname
+foreign key (dep_id)
+references departments(id);
+
+desc staff;
+
+-- drop a foreign key
+alter table staff drop foreign key foreignkeyname;
+
+-- add an index
+alter table staff add index idx_salary(salary);
+show index from staff;
+
+-- drop index
+alter table staff drop index idx_salary;
+show index from staff;
+
+-- change the default value of a column
+alter table staff alter column salary set default 2000;
+desc staff;
+
+SELECT name FROM staff WHERE dep_id = 1
+UNION
+SELECT name FROM staff WHERE dep_id = 2;
+
