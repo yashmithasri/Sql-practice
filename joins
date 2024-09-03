@@ -1,0 +1,124 @@
+CREATE DATABASE mysql_join;
+USE mysql_join;
+-- joins from line 60
+SHOW DATABASES;
+
+CREATE TABLE emp (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    dep_id INT,
+    salary DECIMAL(10,2)
+);
+
+CREATE TABLE department (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100)
+);
+
+INSERT INTO emp (name, dep_id, salary) VALUES
+('yashmitha', 1, 200000),
+('karthik', 2, 200000),
+('copper', 3, 440000),
+('armin', 4, 25000),
+('jujutsu', 4, 3300);
+
+INSERT INTO emp (name, dep_id, salary) VALUES
+('lulu', 5, 2000);
+INSERT INTO emp (name, dep_id, salary) VALUES
+('tillu', 99, 99000);
+INSERT INTO department (name) VALUES
+('software developer-2'),
+('fullstack developer'),
+('hr'),
+('engineer');
+
+INSERT INTO department (name) VALUES
+('se2');
+INSERT INTO department (name) VALUES
+('cloud');
+SELECT * FROM emp;
+SELECT * FROM department;
+
+select sum(salary) as tot_salary,
+	   avg(salary) as avg_salary,
+       max(salary) as max_salary,
+       min(salary) as min_salary
+from emp;
+
+SELECT e.name, e.salary, d.name AS department
+FROM emp e
+JOIN department d ON e.dep_id = d.id  -- inner join
+WHERE e.salary > 50000;
+
+set @bonus:=1000;
+select name,salary+@bonus as salary_with_bonus
+from emp;
+
+select concat(e.name, ' works as ',d.name) as employee_info
+from emp e
+join department d on e.dep_id =d.id;
+
+select name,salary,
+		case 
+			when salary>=200000 then 'high'
+            when salary between 3400 and 40000 then 'medium'
+            else 'low'
+		end as salary_category
+from emp;
+
+-- inner join or join , returns only rows that have matching values in both tables
+select *
+from emp
+inner join department on emp.dep_id=department.id;
+
+select emp.name as empname,department.name as depname
+from emp
+inner join department on emp.dep_id=department.id;
+
+select emp.name as empname,department.name as depname
+from emp -- left table(1st one that we used)
+left join department on emp.dep_id=department.id; -- right table 
+
+select emp.name as empname,department.name as depname
+from emp
+right join department on emp.dep_id=department.id;
+
+-- full outer join
+SELECT emp.name AS empname, department.name AS depname
+FROM emp
+LEFT JOIN department ON emp.dep_id = department.id
+UNION -- all
+SELECT emp.name AS empname, department.name AS depname
+FROM emp
+RIGHT JOIN department ON emp.dep_id = department.id;
+-- or
+-- its not working cus its not oracle or postgresql
+-- SELECT emp.name AS empname, department.name AS depname
+-- FROM emp
+-- full outer JOIN department ON emp.dep_id = department.id;
+
+-- cross join - all combinations of emp name and dep name
+SELECT emp.name AS empname, department.name AS depname
+FROM emp
+cross JOIN department;
+
+-- self join
+alter table Emp add manager_id INT;
+select * from Emp;
+update Emp set manager_id=5 where id =1;
+update emp set manager_id=4 where id =2;
+update Emp set manager_id=3 where id =3;
+update Emp set manager_id=2 where id =4;
+update Emp set manager_id=1 where id =5;
+
+select e1.name as emp_name,e2.name as manager_name from emp e1
+inner join emp e2 on e1.manager_id=e2.id;
+
+select *
+from emp
+natural join department;
+
+-- CTE , TEMP TABLE
+-- TRIM-> TRIM,LTRIM,RTRIM
+-- rEPLACE ,SUBSTRING(sAME IN PYTHON SLICING), LOWER,UPPER,STORE PROCEDURE
+-- SUBQUERIES,view
