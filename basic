@@ -1,0 +1,107 @@
+show databases; 
+CREATE DATABASE yasm;
+use yasm;
+
+create table product(
+prod_id varchar(10) Primary key ,
+prod_name varchar(100) not null,
+category varchar(100) not null,
+subcat varchar(50) not null,
+original_price double not null,
+selling_price double not null,
+stock int not null
+);
+
+create table order_details(
+order_id int not null primary key,
+customer_id varchar(10) not null,
+prod_id varchar(10) not null,
+quantity double not null,
+total_price double not null,
+payment_mode varchar(50) not null,
+order_date datetime Not null,
+order_status varchar(25) not null,
+foreign key(customer_id) references customer(customer_id),
+foreign key(prod_id) references product(prod_id)
+);
+
+CREATE TABLE customer(
+ customer_id varchar(10) not null primary key,
+ name varchar(60) not null,
+ city varchar(50) not null,
+ email varchar(45) not null,
+ phone_no varchar(15) not null,
+ address varchar(100) not null,
+ pin_code int not null
+ );
+ 
+ -- inserting into table
+ 
+ insert into product(prod_id,prod_name,category,subcat,original_price,selling_price,stock)
+ values('P101','television','electronics','appliances','50000','80000','100') ,
+ ('P102','chair','furniture','home','500','8000','120');
+ 
+ insert into customer(customer_id,name,city,email,phone_no,address,pin_code)
+ values('C1001','yashmitha','vijayawada','yashmithayashu1@gmail.com','9912447059','patamata,vivekananda colony','520010'),
+('C1002','karthik','rjy','karthikbulusu@gmail.com','7569812166','avaroad,vivekananda colony','530033');
+ 
+INSERT INTO order_details (order_id, customer_id, prod_id, quantity, total_price, payment_mode, order_date, order_status)
+VALUES (1, 'C1001', 'P101', 1, 90000, 'gpay', '2024-02-02', 'shipped'),
+       (2, 'C1002', 'P102', 5, 40000, 'COD', '2024-06-02', 'Delivered');
+ 
+-- dispaly table
+select * from product;
+select * from customer;
+select * from order_details;
+
+-- describe product details like primary ,foreign extra
+desc product;
+
+-- fetch queries
+select * from product where prod_id='P101';
+select prod_name,prod_id,stock from product where prod_id ='P102';
+select * from order_details where order_status='delivered';
+select * from product where original_price>=500;
+select * from product where stock between 100 and 119;
+
+-- update
+update customer set email='yashmithasriv@gmail.com' where customer_id='C1001';
+select * from customer;
+
+-- if no foreign key exists(it wont work now for this,add the 2nd line)
+delete from customer where customer_id='C1002';
+SET FOREIGN_KEY_CHECKS=0; -- to disable foreign key
+
+-- like
+SET SQL_SAFE_UPDATES = 0;
+select * from customer where name like '%a'; -- end with a
+select * from customer where city like 'v%'; -- start with v
+select * from customer where city like '%ya%'; -- inbtw 
+select * from customer where name like 'k%';
+select * from customer where name like '_ar%'; -- for single character
+select * from customer where city like 'r__';  -- rjy is printed
+select * from customer where name in ('karthik','Yashmitha');   -- equal for multiple things
+
+-- limit
+select * from customer limit 1; -- only prints 1 value from table
+
+select distinct city from customer; -- displays unique values in city
+
+-- assignment op :=  ,  string concatenation-  concat ,  case operator-  case
+set @a:=10;
+select @a;
+select concat("hellooo"," ","world");
+ -- aslo can do this  select concat("hellooo"," ","world") as concatenated_string;
+
+select case 
+           when 10>15 then 'greater'
+           when 10=10 then 'equal'
+           else 'less'
+          end as case_operator; 
+          
+-- operators(=,!=,<>(not equal operator),>,<,>=,<=,between,in,like,is null,is not null)
+select 30 * 9 , 22-122,10=10,10<>30,10<99,null is null,~5;
+-- logical operators -- and,or,not
+-- bitwise op -- &,|,^,~,<<,>>
+
+
